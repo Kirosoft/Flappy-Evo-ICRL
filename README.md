@@ -1,8 +1,18 @@
-# LLM-Guided Flappy Bird Evolutionary AI Trainer
+# LLM-Guided Evolutionary Flappy Bird - Evolutionary ICRL
 
 **Project Abstract**
 
 This project is an experiment in **evolutionary in-context reinforcement learning**. It demonstrates how a Large Language Model (LLM) can be used not only to generate and mutate policies, but also to guide the evolution of an agent's behavior in a simulated environment. The system evolves Flappy Bird-playing policies using a hybrid approach: traditional evolutionary algorithms are combined with LLM-guided mutations and policy generation. The LLM is prompted in-context with both successful and failed policies, enabling it to suggest creative, context-aware improvements that avoid known failure modes. This approach leverages the reasoning and generalization abilities of LLMs to accelerate and enrich the policy search process, resulting in more robust and effective agents than random evolution alone.
+
+## Documentation
+
+For a full technical specification, configuration details, and an in-depth explanation of the evolutionary in-context RL approach, see [`docs/manual.md`](docs/manual.md).
+
+![Training Curve Example](docs/image.png)
+
+<!-- Example gameplay screenshot -->
+
+![Gameplay Screenshot](docs/Screenshot%202025-06-09%20000020.png)
 
 ## Features
 - **Main Menu** with options:

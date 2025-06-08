@@ -1,0 +1,6 @@
+{
+  "default": "flap",
+  "dist:close_velo:stable": "do_nothing",
+  "pos:above": "flap",
+  "dist:far_pos:below_velo:rising": "flap"
+}

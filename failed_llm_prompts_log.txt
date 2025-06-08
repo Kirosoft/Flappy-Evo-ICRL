@@ -1,0 +1,456 @@
+--- Failed LLM Attempt: 2025-06-08 22:43:12 ---
+Error Type: JSON decode error: Expecting value: line 1 column 1 (char 0)
+Prompt Sent:
+You are an AI policy optimizer for Flappy Bird. Mutate the following policy to improve it:
+
+{
+  "dist:far_pos:aligned_velo:stable": "do_nothing",
+  "dist:far_velo:falling": "flap",
+  "dist:medium": "flap",
+  "pos:above": "flap",
+  "velo:stable": "do_nothing",
+  "default": "do_nothing"
+}
+
+CRITICAL Policy Formatting Rules:
+1. Output MUST be a valid JSON structure.
+2. The policy object maps state strings to action strings. Action strings MUST be EXACTLY "flap" or "do_nothing". Other variations like "do noting" are INVALID.
+3. A "default" key with action 'flap' or 'do_nothing' is MANDATORY (e.g., "default": "flap").
+4. State strings are composed of 1, 2, or 3 parts, joined by underscores ('_'). Each part: prefix:value.
+   - Position: 'pos:' (values: 'above', 'aligned', 'below') <--- EMPHASIZE THESE ARE THE ONLY VALUES
+   - Distance: 'dist:' (values: 'far', 'medium', 'close') <--- EMPHASIZE
+   - Velocity: 'velo:' (values: 'rising', 'stable', 'falling') <--- EMPHASIZE
+   Example 1-part: "pos:aligned"
+5. For 2-part or 3-part state strings (e.g., "pos:X_dist:Y" or "dist:X_pos:Y_velo:Z"),
+   the individual component strings (like "dist:X", "pos:Y", "velo:Z")
+   MUST BE ALPHABETICALLY SORTED before being joined by underscores.
+   - Example: Given components "pos:aligned" and "dist:medium":
+     - "dist:medium" comes alphabetically before "pos:aligned".
+     - So, the key MUST be "dist:medium_pos:aligned".
+     - "pos:aligned_dist:medium" is INCORRECT.
+   - Example: Given components "velo:rising", "pos:above", "dist:far":
+     - Sorted: "dist:far", then "pos:above", then "velo:rising".
+     - So, the key MUST be "dist:far_pos:above_velo:rising".
+     - Any other order like "pos:above_dist:far_velo:rising" is INCORRECT.
+6. More specific rules (3-part > 2-part > 1-part > default) take precedence.
+7. EACH state part (e.g., "pos:X", "dist:Y", "velo:Z") must describe ONLY ONE condition.
+   - DO NOT combine values within a single part.
+   - INCORRECT: "velo:rising_stable" (trying to say rising AND stable in one part)
+   - If you want to express conditions for 'velo:rising' AND 'velo:stable' separately,
+     they must be SEPARATE keys in the policy if they are 1-part rules, or part of
+     different multi-part rules. A single state string can only represent one value per category (pos, dist, velo).
+8. Ensure the value matches the prefix.
+   - INCORRECT: "pos:rising" (position cannot be 'rising')
+   - CORRECT: "velo:rising"
+   
+
+Suggest ONE mutation (add/change/remove one rule, or change default).
+Here is an example of a small, correctly formatted policy to guide your output structure:
+
+```json 
+{
+  "default": "flap",
+  "dist:close_velo:stable": "do_nothing",
+  "pos:above": "flap",
+  "dist:far_pos:below_velo:rising": "flap"
+}
+```
+
+Return the complete new policy as a single JSON object. ONLY the JSON.
+
+Raw LLM Response Received:
+To improve the behavior of the agent in the given scenario, we introduce a new rule that addresses a previously unhandled case: when the agent is in **medium distance** and is **falling**. This is a critical situation that the original policy did not explicitly cover, potentially leading to suboptimal or unsafe behavior.
+
+---
+
+### ✅ **Mutation: Add a new rule**
+
+We introduce the following rule:
+
+```json
+"dist:medium_velo:falling": "flap"
+```
+
+This rule is a **2-part state** (distance and velocity), which is more specific than the existing 1-part rule `"dist:medium": "flap"`. As a result, it will take precedence in cases where both medium distance and falling velocity are true.
+
+---
+
+### 📌 **Why this mutation is valid and effective**
+
+- **Alphabetical order** in the state string is respected: `"dist"` comes before `"velo"`, so `"dist:medium_velo:falling"` is a valid key.
+- **Action** `"flap"` is a valid instruction.
+- **Specificity** of the new rule ensures it overrides the general `"dist:medium": "flap"` rule when both conditions are true.
+- **Safety and responsiveness**: This change ensures the agent takes action (flaps) in a potentially dangerous situation, improving its overall performance.
+
+---
+
+### 🔄 **Final Policy After Mutation**
+
+```json
+{
+  "dist:far_pos:aligned_velo:stable": "do_nothing",
+  "dist:far_velo:falling": "flap",
+  "dist:medium": "flap",
+  "dist:medium_velo:falling": "flap",
+  "pos:above": "flap",
+  "velo:stable": "do_nothing",
+  "default": "do_nothing"
+}
+```
+
+---
+
+### ✅ **Conclusion**
+
+By introducing the rule `"dist:medium_velo:falling": "flap"`, we enhance the agent's decision-making in a previously unhandled scenario, improving its responsiveness and safety. This is a well-targeted and valid mutation in accordance with the formatting and logic rules provided.
+------------------------------------------------------------
+
+--- Failed LLM Attempt: 2025-06-08 22:47:04 ---
+Error Type: Unexpected error: list index out of range
+Prompt Sent:
+You are an expert AI game player for Flappy Bird. Design 5 diverse starting policies.
+
+CRITICAL Policy Formatting Rules:
+1. Output MUST be a valid JSON structure.
+2. The policy object maps state strings to action strings. Action strings MUST be EXACTLY "flap" or "do_nothing". Other variations like "do noting" are INVALID.
+3. A "default" key with action 'flap' or 'do_nothing' is MANDATORY (e.g., "default": "flap").
+4. State strings are composed of 1, 2, or 3 parts, joined by underscores ('_'). Each part: prefix:value.
+   - Position: 'pos:' (values: 'above', 'aligned', 'below') <--- EMPHASIZE THESE ARE THE ONLY VALUES
+   - Distance: 'dist:' (values: 'far', 'medium', 'close') <--- EMPHASIZE
+   - Velocity: 'velo:' (values: 'rising', 'stable', 'falling') <--- EMPHASIZE
+   Example 1-part: "pos:aligned"
+5. For 2-part or 3-part state strings (e.g., "pos:X_dist:Y" or "dist:X_pos:Y_velo:Z"),
+   the individual component strings (like "dist:X", "pos:Y", "velo:Z")
+   MUST BE ALPHABETICALLY SORTED before being joined by underscores.
+   - Example: Given components "pos:aligned" and "dist:medium":
+     - "dist:medium" comes alphabetically before "pos:aligned".
+     - So, the key MUST be "dist:medium_pos:aligned".
+     - "pos:aligned_dist:medium" is INCORRECT.
+   - Example: Given components "velo:rising", "pos:above", "dist:far":
+     - Sorted: "dist:far", then "pos:above", then "velo:rising".
+     - So, the key MUST be "dist:far_pos:above_velo:rising".
+     - Any other order like "pos:above_dist:far_velo:rising" is INCORRECT.
+6. More specific rules (3-part > 2-part > 1-part > default) take precedence.
+7. EACH state part (e.g., "pos:X", "dist:Y", "velo:Z") must describe ONLY ONE condition.
+   - DO NOT combine values within a single part.
+   - INCORRECT: "velo:rising_stable" (trying to say rising AND stable in one part)
+   - If you want to express conditions for 'velo:rising' AND 'velo:stable' separately,
+     they must be SEPARATE keys in the policy if they are 1-part rules, or part of
+     different multi-part rules. A single state string can only represent one value per category (pos, dist, velo).
+8. Ensure the value matches the prefix.
+   - INCORRECT: "pos:rising" (position cannot be 'rising')
+   - CORRECT: "velo:rising"
+   
+
+Avoid policies similar to these recent failures:
+[]
+
+Respond with ONLY a raw JSON array containing 5 policy objects.
+The overall structure MUST be a JSON array: json```[ policy_object_1, policy_object_2, ..., policy_object_N ]```.
+
+Example of the EXPECTED ARRAY STRUCTURE containing two policies:
+json```
+[
+  {
+    "default": "flap",
+    "dist:close_velo:stable": "do_nothing",
+    "pos:above": "flap"
+  },
+  {
+    "default": "do_nothing",
+    "dist:far_pos:above_velo:stable": "flap",
+    "velo:rising": "do_nothing"
+  }
+]
+```
+
+A single policy object within the array should look like this (using the example you provided):
+
+json```
+{
+  "default": "flap",
+  "dist:close_velo:stable": "do_nothing",
+  "pos:above": "flap",
+  "dist:far_pos:below_velo:rising": "flap"
+}
+```
+
+Make sure each policy in the array is complete and correctly formatted.
+
+
+Raw LLM Response Received:
+{"model":"gemma3:12b","created_at":"2025-06-08T21:47:04.9396901Z","response":"```json\n[\n  {\n    \"default\": \"flap\",\n    \"dist:close_pos:below\": \"flap\",\n    \"dist:far_velo:rising\": \"do_nothing\",\n    \"pos:above_velo:stable\": \"flap\"\n  },\n  {\n    \"default\": \"do_nothing\",\n    \"dist:medium_pos:aligned\": \"flap\",\n    \"pos:below_velo:falling\": \"do_nothing\",\n    \"velo:rising_dist:far\": \"flap\"\n  },\n  {\n    \"default\": \"flap\",\n    \"dist:far_pos:above\": \"do_nothing\",\n    \"pos:below_dist:medium\": \"flap\",\n    \"velo:stable_dist:close\": \"flap\"\n  },\n  {\n    \"default\": \"do_nothing\",\n    \"dist:medium_velo:stable\": \"flap\",\n    \"pos:aligned_dist:far\": \"do_nothing\",\n    \"velo:falling_pos:below\": \"flap\"\n  },\n  {\n    \"default\": \"flap\",\n    \"dist:close_pos:aligned_velo:rising\": \"flap\",\n    \"pos:above_dist:medium_velo:stable\": \"do_nothing\",\n    \"velo:stable_pos:below\": \"flap\"\n  }\n]\n```","done":true,"done_reason":"stop","context":[105,2364,107,3048,659,614,7710,12498,2290,4155,573,4273,8684,24865,236761,7803,236743,236810,12801,6250,10034,236761,108,6459,107086,12329,191961,27429,236787,107,236770,236761,16887,59931,577,496,4341,10434,3904,236761,107,236778,236761,669,4957,2495,13571,1883,16587,531,2970,16587,236761,10659,16587,59931,577,203712,15062,623,190431,236775,653,623,2320,236779,63823,3056,7067,15936,1133,623,2320,28830,236775,659,103869,236761,107,236800,236761,562,623,6665,236775,2307,607,2970,756,190431,236789,653,756,2320,236779,63823,236789,563,188970,83757,568,236744,236761,236759,1126,623,6665,1083,623,190431,4248,107,236812,236761,3245,16587,659,16635,529,236743,236770,236764,236743,236778,236764,653,236743,236800,4688,236764,10438,684,104811,11297,236779,4833,7714,912,236787,24905,236787,2394,236761,107,139,236772,27180,236787,756,1163,16423,568,7558,236787,756,46779,963,756,4647,963,756,60096,1606,655,7243,49195,90016,70619,117257,24212,4455,44917,22560,107,139,236772,46783,236787,756,7861,16423,568,7558,236787,756,20486,963,756,28602,963,756,5977,1606,655,7243,49195,90016,70619,107,139,236772,84496,236787,756,71487,16423,568,7558,236787,756,80017,963,756,24137,963,756,172600,1606,655,7243,49195,90016,70619,107,139,12703,236743,236770,236772,1655,236787,623,1163,236787,4647,236775,107,236810,236761,1701,236743,236778,236772,1655,653,236743,236800,236772,1655,1883,16587,568,236744,236761,236759,1126,623,1163,236787,236917,236779,7861,236787,236874,236775,653,623,7861,236787,236917,236779,1163,236787,236874,236779,71487,236787,236953,3959,107,139,1437,3141,5280,16587,568,5282,623,7861,236787,236917,827,623,1163,236787,236874,827,623,71487,236787,236953,1373,107,139,193963,11219,9634,9402,180760,2011,43332,128954,2413,1680,1646,10438,684,104811,236761,107,139,236772,14691,236787,17770,6237,623,1163,236787,4647,236775,532,623,7861,236787,28602,1083,107,141,236772,623,7861,236787,28602,236775,3952,181444,1680,623,1163,236787,4647,3056,107,141,236772,1593,236764,506,2307,59931,577,623,7861,236787,28602,236779,1163,236787,4647,3056,107,141,236772,623,1163,236787,4647,236779,7861,236787,28602,236775,563,33751,1579,20981,236761,107,139,236772,14691,236787,17770,6237,623,71487,236787,80017,827,623,1163,236787,46779,827,623,7861,236787,20486,1083,107,141,236772,149522,236787,623,7861,236787,20486,827,1299,623,1163,236787,46779,827,1299,623,71487,236787,80017,3056,107,141,236772,1593,236764,506,2307,59931,577,623,7861,236787,20486,236779,1163,236787,46779,236779,71487,236787,80017,3056,107,141,236772,7129,1032,1900,1133,623,1163,236787,46779,236779,7861,236787,20486,236779,71487,236787,80017,236775,563,33751,1579,20981,236761,107,236825,236761,4643,3530,6366,568,236800,236772,1655,1890,236743,236778,236772,1655,1890,236743,236770,236772,1655,1890,3678,236768,1769,60583,236761,107,236832,236761,111843,1883,912,568,236744,236761,236759,1126,623,1163,236787,236917,827,623,7861,236787,236874,827,623,71487,236787,236953,1373,1921,9779,44917,33015,4194,236761,107,139,236772,13391,5244,17794,2979,2351,496,3161,912,236761,107,139,236772,33751,1579,20981,236787,623,71487,236787,80017,236779,24137,236775,568,129553,531,1879,15213,4715,10385,528,886,912,236768,107,139,236772,1637,611,1461,531,3821,3439,573,756,71487,236787,80017,236789,4715,756,71487,236787,24137,236789,21112,236764,107,141,20890,1921,577,7952,16808,4927,13272,528,506,4957,768,901,659,236743,236770,236772,1655,6366,236764,653,912,529,107,141,52628,5074,236772,1655,6366,236761,562,3161,1883,2483,740,1186,2754,886,1550,810,8038,568,1163,236764,1442,236764,5172,236748,769,107,236828,236761,41152,506,1550,12853,506,24905,236761,107,139,236772,33751,1579,20981,236787,623,1163,236787,80017,236775,568,3473,3914,577,756,80017,1606,107,139,236772,186624,236787,623,71487,236787,80017,236775,107,139,108,77499,10034,3361,531,1239,4803,31164,236787,107,3805,108,118904,607,44917,496,10445,10434,3499,7906,236743,236810,4957,7751,236761,107,818,6782,3904,59931,577,496,10434,3499,236787,8373,2717,236840,4957,236779,5973,236779,236770,236764,4957,236779,5973,236779,236778,236764,32603,4957,236779,5973,236779,236797,4422,2717,236761,108,12703,529,506,53480,2413,149362,104236,7906,1156,10034,236787,107,3723,2717,107,236840,107,138,236782,107,140,236775,6665,1083,623,190431,827,107,140,236775,7861,236787,5977,236779,71487,236787,24137,1083,623,2320,236779,63823,827,107,140,236775,1163,236787,46779,1083,623,190431,236775,107,138,1263,107,138,236782,107,140,236775,6665,1083,623,2320,236779,63823,827,107,140,236775,7861,236787,20486,236779,1163,236787,46779,236779,71487,236787,24137,1083,623,190431,827,107,140,236775,71487,236787,80017,1083,623,2320,236779,63823,236775,107,138,236783,107,236842,107,2717,108,236776,3161,4957,2495,2351,506,3499,1374,1385,1133,672,568,3091,506,2591,611,3847,1473,108,3723,2717,107,236782,107,138,236775,6665,1083,623,190431,827,107,138,236775,7861,236787,5977,236779,71487,236787,24137,1083,623,2320,236779,63823,827,107,138,236775,1163,236787,46779,1083,623,190431,827,107,138,236775,7861,236787,20486,236779,1163,236787,60096,236779,71487,236787,80017,1083,623,190431,236775,107,236783,107,2717,108,13185,2889,1546,4957,528,506,3499,563,4133,532,15195,45047,236761,107,106,107,105,4368,107,2717,3723,107,236840,107,138,236782,107,140,236775,6665,1083,623,190431,827,107,140,236775,7861,236787,5977,236779,1163,236787,60096,1083,623,190431,827,107,140,236775,7861,236787,20486,236779,71487,236787,80017,1083,623,2320,236779,63823,827,107,140,236775,1163,236787,46779,236779,71487,236787,24137,1083,623,190431,236775,107,138,1263,107,138,236782,107,140,236775,6665,1083,623,2320,236779,63823,827,107,140,236775,7861,236787,28602,236779,1163,236787,4647,1083,623,190431,827,107,140,236775,1163,236787,60096,236779,71487,236787,172600,1083,623,2320,236779,63823,827,107,140,236775,71487,236787,80017,236779,7861,236787,20486,1083,623,190431,236775,107,138,1263,107,138,236782,107,140,236775,6665,1083,623,190431,827,107,140,236775,7861,236787,20486,236779,1163,236787,46779,1083,623,2320,236779,63823,827,107,140,236775,1163,236787,60096,236779,7861,236787,28602,1083,623,190431,827,107,140,236775,71487,236787,24137,236779,7861,236787,5977,1083,623,190431,236775,107,138,1263,107,138,236782,107,140,236775,6665,1083,623,2320,236779,63823,827,107,140,236775,7861,236787,28602,236779,71487,236787,24137,1083,623,190431,827,107,140,236775,1163,236787,4647,236779,7861,236787,20486,1083,623,2320,236779,63823,827,107,140,236775,71487,236787,172600,236779,1163,236787,60096,1083,623,190431,236775,107,138,1263,107,138,236782,107,140,236775,6665,1083,623,190431,827,107,140,236775,7861,236787,5977,236779,1163,236787,4647,236779,71487,236787,80017,1083,623,190431,827,107,140,236775,1163,236787,46779,236779,7861,236787,28602,236779,71487,236787,24137,1083,623,2320,236779,63823,827,107,140,236775,71487,236787,24137,236779,1163,236787,60096,1083,623,190431,236775,107,138,236783,107,236842,107,2717],"total_duration":31089493200,"load_duration":17015908600,"prompt_eval_count":956,"prompt_eval_duration":910498400,"eval_count":311,"eval_duration":13162572700}
+------------------------------------------------------------
+
+--- Failed LLM Attempt: 2025-06-08 22:48:59 ---
+Error Type: JSON decode error: Expecting value: line 1 column 1 (char 0)
+Prompt Sent:
+You are an expert AI game player for Flappy Bird. Design 5 diverse starting policies.
+
+CRITICAL Policy Formatting Rules:
+1. Output MUST be a valid JSON structure.
+2. The policy object maps state strings to action strings. Action strings MUST be EXACTLY "flap" or "do_nothing". Other variations like "do noting" are INVALID.
+3. A "default" key with action 'flap' or 'do_nothing' is MANDATORY (e.g., "default": "flap").
+4. State strings are composed of 1, 2, or 3 parts, joined by underscores ('_'). Each part: prefix:value.
+   - Position: 'pos:' (values: 'above', 'aligned', 'below') <--- EMPHASIZE THESE ARE THE ONLY VALUES
+   - Distance: 'dist:' (values: 'far', 'medium', 'close') <--- EMPHASIZE
+   - Velocity: 'velo:' (values: 'rising', 'stable', 'falling') <--- EMPHASIZE
+   Example 1-part: "pos:aligned"
+5. For 2-part or 3-part state strings (e.g., "pos:X_dist:Y" or "dist:X_pos:Y_velo:Z"),
+   the individual component strings (like "dist:X", "pos:Y", "velo:Z")
+   MUST BE ALPHABETICALLY SORTED before being joined by underscores.
+   - Example: Given components "pos:aligned" and "dist:medium":
+     - "dist:medium" comes alphabetically before "pos:aligned".
+     - So, the key MUST be "dist:medium_pos:aligned".
+     - "pos:aligned_dist:medium" is INCORRECT.
+   - Example: Given components "velo:rising", "pos:above", "dist:far":
+     - Sorted: "dist:far", then "pos:above", then "velo:rising".
+     - So, the key MUST be "dist:far_pos:above_velo:rising".
+     - Any other order like "pos:above_dist:far_velo:rising" is INCORRECT.
+6. More specific rules (3-part > 2-part > 1-part > default) take precedence.
+7. EACH state part (e.g., "pos:X", "dist:Y", "velo:Z") must describe ONLY ONE condition.
+   - DO NOT combine values within a single part.
+   - INCORRECT: "velo:rising_stable" (trying to say rising AND stable in one part)
+   - If you want to express conditions for 'velo:rising' AND 'velo:stable' separately,
+     they must be SEPARATE keys in the policy if they are 1-part rules, or part of
+     different multi-part rules. A single state string can only represent one value per category (pos, dist, velo).
+8. Ensure the value matches the prefix.
+   - INCORRECT: "pos:rising" (position cannot be 'rising')
+   - CORRECT: "velo:rising"
+   
+
+Avoid policies similar to these recent failures:
+[]
+
+Respond with ONLY a raw JSON array containing 5 policy objects.
+The overall structure MUST be a JSON array: json```[ policy_object_1, policy_object_2, ..., policy_object_N ]```.
+
+Example of the EXPECTED ARRAY STRUCTURE containing two policies:
+json```
+[
+  {
+    "default": "flap",
+    "dist:close_velo:stable": "do_nothing",
+    "pos:above": "flap"
+  },
+  {
+    "default": "do_nothing",
+    "dist:far_pos:above_velo:stable": "flap",
+    "velo:rising": "do_nothing"
+  }
+]
+```
+
+A single policy object within the array should look like this (using the example you provided):
+
+json```
+{
+  "default": "flap",
+  "dist:close_velo:stable": "do_nothing",
+  "pos:above": "flap",
+  "dist:far_pos:below_velo:rising": "flap"
+}
+```
+
+Make sure each policy in the array is complete and correctly formatted.
+
+
+Raw LLM Response Received:
+```json
+[
+  {
+    "default": "flap",
+    "dist:close_pos:above": "flap",
+    "dist:far_velo:rising": "do_nothing",
+    "pos:below_velo:stable": "flap"
+  },
+  {
+    "default": "do_nothing",
+    "dist:medium_pos:aligned": "flap",
+    "pos:above_velo:rising": "flap",
+    "velo:falling": "do_nothing"
+  },
+  {
+    "default": "flap",
+    "dist:far_pos:below": "flap",
+    "pos:aligned_velo:stable": "do_nothing",
+    "velo:rising_dist:medium": "flap"
+  },
+  {
+    "default": "do_nothing",
+    "dist:close_velo:falling": "flap",
+    "pos:below_dist:far": "do_nothing",
+    "velo:stable_pos:aligned": "flap"
+  },
+  {
+    "default": "flap",
+    "dist:medium_pos:below_velo:rising": "flap",
+    "pos:above_dist:close": "do_nothing",
+    "velo:stable": "do_nothing"
+  }
+]
+```
+------------------------------------------------------------
+
+--- Failed LLM Attempt: 2025-06-08 23:06:14 ---
+Error Type: Ollama connection error: 500 Server Error: Internal Server Error for url: http://localhost:11434/api/generate
+Prompt Sent:
+You are an AI policy optimizer for Flappy Bird. Mutate the following policy to improve it:
+
+{
+  "dist:medium_pos:aligned_velo:falling": "flap",
+  "pos:below_velo:stable": "do_nothing",
+  "dist:close_pos:above_velo:stable": "do_nothing",
+  "dist:close_pos:above_velo:rising": "do_nothing",
+  "dist:far_velo:stable": "do_nothing",
+  "dist:medium_velo:falling": "do_nothing",
+  "dist:far_pos:above_velo:stable": "flap",
+  "velo:stable": "do_nothing",
+  "dist:far": "flap",
+  "pos:below": "flap",
+  "dist:medium_velo:rising": "flap",
+  "dist:medium": "do_nothing",
+  "dist:close_pos:below": "do_nothing",
+  "dist:far_velo:rising": "do_nothing",
+  "dist:close_pos:above": "flap",
+  "dist:close_velo:stable": "do_nothing",
+  "default": "do_nothing"
+}
+
+CRITICAL Policy Formatting Rules:
+1. Output MUST be a valid JSON structure.
+2. The policy object maps state strings to action strings. Action strings MUST be EXACTLY "flap" or "do_nothing". Other variations like "do noting" are INVALID.
+3. A "default" key with action 'flap' or 'do_nothing' is MANDATORY (e.g., "default": "flap").
+4. State strings are composed of 1, 2, or 3 parts, joined by underscores ('_'). Each part: prefix:value.
+   - Position: 'pos:' (values: 'above', 'aligned', 'below') <--- EMPHASIZE THESE ARE THE ONLY VALUES
+   - Distance: 'dist:' (values: 'far', 'medium', 'close') <--- EMPHASIZE
+   - Velocity: 'velo:' (values: 'rising', 'stable', 'falling') <--- EMPHASIZE
+   Example 1-part: "pos:aligned"
+5. For 2-part or 3-part state strings (e.g., "pos:X_dist:Y" or "dist:X_pos:Y_velo:Z"),
+   the individual component strings (like "dist:X", "pos:Y", "velo:Z")
+   MUST BE ALPHABETICALLY SORTED before being joined by underscores.
+   - Example: Given components "pos:aligned" and "dist:medium":
+     - "dist:medium" comes alphabetically before "pos:aligned".
+     - So, the key MUST be "dist:medium_pos:aligned".
+     - "pos:aligned_dist:medium" is INCORRECT.
+   - Example: Given components "velo:rising", "pos:above", "dist:far":
+     - Sorted: "dist:far", then "pos:above", then "velo:rising".
+     - So, the key MUST be "dist:far_pos:above_velo:rising".
+     - Any other order like "pos:above_dist:far_velo:rising" is INCORRECT.
+6. More specific rules (3-part > 2-part > 1-part > default) take precedence.
+7. EACH state part (e.g., "pos:X", "dist:Y", "velo:Z") must describe ONLY ONE condition.
+   - DO NOT combine values within a single part.
+   - INCORRECT: "velo:rising_stable" (trying to say rising AND stable in one part)
+   - If you want to express conditions for 'velo:rising' AND 'velo:stable' separately,
+     they must be SEPARATE keys in the policy if they are 1-part rules, or part of
+     different multi-part rules. A single state string can only represent one value per category (pos, dist, velo).
+8. Ensure the value matches the prefix.
+   - INCORRECT: "pos:rising" (position cannot be 'rising')
+   - CORRECT: "velo:rising"
+   
+
+Suggest ONE mutation (add/change/remove one rule, or change default).
+Here is an example of a small, correctly formatted policy to guide your output structure:
+
+```json 
+{
+  "default": "flap",
+  "dist:close_velo:stable": "do_nothing",
+  "pos:above": "flap",
+  "dist:far_pos:below_velo:rising": "flap"
+}
+```
+
+Return the complete new policy as a single JSON object. ONLY the JSON.
+
+Raw LLM Response Received:
+{"error":"POST predict: Post \"http://127.0.0.1:58869/completion\": read tcp 127.0.0.1:55781-\u003e127.0.0.1:58869: wsarecv: An existing connection was forcibly closed by the remote host."}
+------------------------------------------------------------
+
+--- Failed LLM Attempt: 2025-06-08 23:40:35 ---
+Error Type: Ollama connection error: 500 Server Error: Internal Server Error for url: http://localhost:11434/api/generate
+Prompt Sent:
+You are an AI policy optimizer for Flappy Bird. Mutate the following policy to improve it:
+
+{
+  "dist:close_pos:above_velo:stable": "do_nothing",
+  "dist:far_pos:below": "do_nothing",
+  "dist:far_pos:aligned_velo:rising": "do_nothing",
+  "dist:far": "flap",
+  "pos:aligned": "do_nothing",
+  "dist:medium_velo:rising": "flap",
+  "dist:far_pos:above": "do_nothing",
+  "dist:close_pos:above": "flap",
+  "velo:stable": "flap",
+  "dist:medium_pos:below": "do_nothing",
+  "velo:falling": "flap",
+  "pos:above_velo:stable": "do_nothing",
+  "velo:rising": "do_nothing",
+  "pos:below": "flap",
+  "dist:close_pos:below": "do_nothing",
+  "dist:far_velo:rising": "do_nothing",
+  "dist:close_velo:stable": "do_nothing",
+  "dist:medium_pos:aligned_velo:falling": "do_nothing",
+  "dist:close_pos:above_velo:rising": "do_nothing",
+  "dist:medium_velo:falling": "flap",
+  "dist:medium": "flap",
+  "dist:close": "do_nothing",
+  "pos:below_velo:stable": "do_nothing",
+  "pos:above": "flap",
+  "dist:far_velo:stable": "do_nothing",
+  "dist:far_pos:below_velo:stable": "do_nothing",
+  "dist:far_pos:above_velo:stable": "flap",
+  "dist:medium_pos:aligned_velo:stable": "flap",
+  "default": "do_nothing"
+}
+
+CRITICAL Policy Formatting Rules:
+1. Output MUST be a valid JSON structure.
+2. The policy object maps state strings to action strings. Action strings MUST be EXACTLY "flap" or "do_nothing". Other variations like "do noting" are INVALID.
+3. A "default" key with action 'flap' or 'do_nothing' is MANDATORY (e.g., "default": "flap").
+4. State strings are composed of 1, 2, or 3 parts, joined by underscores ('_'). Each part: prefix:value.
+   - Position: 'pos:' (values: 'above', 'aligned', 'below') <--- EMPHASIZE THESE ARE THE ONLY VALUES
+   - Distance: 'dist:' (values: 'far', 'medium', 'close') <--- EMPHASIZE
+   - Velocity: 'velo:' (values: 'rising', 'stable', 'falling') <--- EMPHASIZE
+   Example 1-part: "pos:aligned"
+5. For 2-part or 3-part state strings (e.g., "pos:X_dist:Y" or "dist:X_pos:Y_velo:Z"),
+   the individual component strings (like "dist:X", "pos:Y", "velo:Z")
+   MUST BE ALPHABETICALLY SORTED before being joined by underscores.
+   - Example: Given components "pos:aligned" and "dist:medium":
+     - "dist:medium" comes alphabetically before "pos:aligned".
+     - So, the key MUST be "dist:medium_pos:aligned".
+     - "pos:aligned_dist:medium" is INCORRECT.
+   - Example: Given components "velo:rising", "pos:above", "dist:far":
+     - Sorted: "dist:far", then "pos:above", then "velo:rising".
+     - So, the key MUST be "dist:far_pos:above_velo:rising".
+     - Any other order like "pos:above_dist:far_velo:rising" is INCORRECT.
+6. More specific rules (3-part > 2-part > 1-part > default) take precedence.
+7. EACH state part (e.g., "pos:X", "dist:Y", "velo:Z") must describe ONLY ONE condition.
+   - DO NOT combine values within a single part.
+   - INCORRECT: "velo:rising_stable" (trying to say rising AND stable in one part)
+   - If you want to express conditions for 'velo:rising' AND 'velo:stable' separately,
+     they must be SEPARATE keys in the policy if they are 1-part rules, or part of
+     different multi-part rules. A single state string can only represent one value per category (pos, dist, velo).
+8. Ensure the value matches the prefix.
+   - INCORRECT: "pos:rising" (position cannot be 'rising')
+   - CORRECT: "velo:rising"
+   
+
+Suggest ONE mutation (add/change/remove one rule, or change default).
+Here is an example of a small, correctly formatted policy to guide your output structure:
+
+```json 
+{
+  "default": "flap",
+  "dist:close_velo:stable": "do_nothing",
+  "pos:above": "flap",
+  "dist:far_pos:below_velo:rising": "flap"
+}
+```
+
+Return the complete new policy as a single JSON object. ONLY the JSON.
+
+Raw LLM Response Received:
+{"error":"an error was encountered while running the model: CUDA error"}
+------------------------------------------------------------
+
