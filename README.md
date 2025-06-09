@@ -51,7 +51,7 @@ pip install -r requirements.txt
    - Quit: Exit the application.
 
 ## Documentation
-- See ![Documentation](docs/manual.md)
+- See [Documentation](docs/manual.md)
 
 ## LLM Integration
 - The LLM is used to generate initial policy populations (Gemma3) and to perform intelligent mutation during evolution.
