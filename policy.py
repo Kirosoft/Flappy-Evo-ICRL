@@ -7,7 +7,6 @@ import pygame
 from utils import log_failed_llm_attempt
 from flappy_sim import _shared_game_eval_instance
 
-
 PER_GENERATION_BEST_DIR = "generation_best_policies"
 LLM_TEMPERATURE_INIT_POP = 0.7
 NUM_GENERATIONS = 100

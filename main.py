@@ -6,9 +6,6 @@ from flappy_sim import FlappyBirdGame
 from llm import EXAMPLE_POLICY_PATH, INITIAL_POP_TEMPLATE_PATH, MUTATION_TEMPLATE_PATH, POLICY_FORMAT_GUIDANCE_PATH
 from policy import train_policy, validate_policy, get_action_from_policy
 
-# --- Directory for Per-Generation Best Policies (Ensure this is defined globally or accessible) ---
-PER_GENERATION_BEST_DIR = "generation_best_policies" 
-
 load_dotenv()
 
 def run_flappy_game(policy=None, interactive=False, max_frames=10000, render=True, return_fitness=False):

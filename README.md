@@ -1,65 +1,78 @@
-# LLM-Guided Evolutionary Flappy Bird - Evolutionary ICRL
+# Flappy Evo ICRL (LLM-Guided Flappy Bird Evolution)
 
-**Project Abstract**
+## Project Abstract
 
-This project is an experiment in **evolutionary in-context reinforcement learning**. It demonstrates how a Large Language Model (LLM) can be used not only to generate and mutate policies, but also to guide the evolution of an agent's behavior in a simulated environment. The system evolves Flappy Bird-playing policies using a hybrid approach: traditional evolutionary algorithms are combined with LLM-guided mutations and policy generation. The LLM is prompted in-context with both successful and failed policies, enabling it to suggest creative, context-aware improvements that avoid known failure modes. This approach leverages the reasoning and generalization abilities of LLMs to accelerate and enrich the policy search process, resulting in more robust and effective agents than random evolution alone.
+This project is an experiment in evolutionary in-context reinforcement learning. It demonstrates how a Large Language Model (LLM) can be used not only to generate and mutate policies, but also to guide the evolution of an agent's behavior in a simulated environment. The system evolves Flappy Bird-playing policies using a hybrid approach: traditional evolutionary algorithms are combined with LLM-guided mutations and policy generation. The LLM is prompted in-context with both successful and failed policies, enabling it to suggest creative, context-aware improvements that avoid known failure modes. This approach leverages the reasoning and generalization abilities of LLMs to accelerate and enrich the policy search process, resulting in more robust and effective agents than random evolution alone.
 
-## Documentation
-
-For a full technical specification, configuration details, and an in-depth explanation of the evolutionary in-context RL approach, see [`docs/manual.md`](docs/manual.md).
-
-![Training Curve Example](docs/image.png)
-
-<!-- Example gameplay screenshot -->
-
-![Gameplay Screenshot](docs/Screenshot%202025-06-09%20000020.png)
+Note: This project was vibe coded!
 
 ## Features
-- **Main Menu** with options:
-  - Play Best Policy (if available)
-  - Train Policy (Evolution)
-  - Play Yourself
-  - Quit
-- **Interactive Play**: Play Flappy Bird using your keyboard (spacebar to flap).
-- **AI Training**: Evolves policies using both random and LLM-guided mutations, with real-time training visualization and persistent best policy storage.
-- **AI Playback**: Watch the best-trained policy play the game autonomously.
-- **Robust Game Logic**: Consistent pipe gap randomization, collision detection, and unified gameplay for both human and AI.
-- **LLM Integration**: Uses Ollama and a local instruction-following model (e.g., llama3:8b-instruct) for policy generation and mutation.
+- **Interactive Play:** Play Flappy Bird yourself using the keyboard.
+- **AI Training:** Train an AI policy using evolutionary algorithms, with LLM-guided mutation and population seeding. Real-time training progress is visualized.
+- **AI Playback:** Watch the best evolved policy play the game automatically.
 
-## How to Run
-
-1. **Install Python 3.x** and required libraries:
-
-    pip install -r requirements.txt
-
-2. **Install and Run Ollama** (for LLM-guided evolution):
-   - Download and install from https://ollama.com/
-   - Pull a suitable model (e.g., llama3:8b-instruct):
-
-        ollama pull llama3:8b-instruct
-
-   - Start the Ollama server.
-   - Set the `OLLAMA_ENDPOINT` and `OLLAMA_MODEL` in your `.env` file if needed (see `.env.example`).
-
-3. **Start the Application**:
-
-    python main.py
-
-4. **Follow the on-screen menu** to play, train, or watch the AI.
 
 ## Project Structure
-- `main.py`: All game, UI, AI, and training logic.
-- `requirements.txt`: Python dependencies.
-- `.env.example`: Example environment variables for LLM integration.
-- `best_policy.json`: Stores the best evolved policy.
-- `README.md`: This file.
+- `main.py` — Main application and UI loop
+- `flappy_sim.py` — FlappyBirdGame class (game logic)
+- `policy.py` — Policy normalization, validation, random generation, and training logic
+- `evolution.py` — Evolutionary algorithm: fitness, crossover, mutation
+- `llm.py` — LLM API calls and prompt construction
+- `utils.py` — Utility functions (file I/O, logging)
+- `game_instance.py` — Shared FlappyBirdGame instance for evaluation
+- `prompts/` — Prompt templates and example policies for LLM
+- `generation_best_policies/` — Per-generation best policies (saved during training)
+- `docs/` — Additional documentation and screenshots
 
-## Technical Notes
-- **Dependencies**: `pygame`, `requests`, `matplotlib`, `numpy`, `python-dotenv`.
-- **LLM**: Requires a running Ollama server and a suitable model for JSON-based policy generation/mutation.
-- **Training Visualization**: Real-time fitness curve and policy display during evolution.
-- **Policy Storage**: Best policy is saved to `best_policy.json` and loaded for playback.
+## Requirements
+- Python 3.x
+- [pygame](https://www.pygame.org/)
+- [requests](https://docs.python-requests.org/)
+- [python-dotenv](https://pypi.org/project/python-dotenv/)
+- [Ollama](https://ollama.com/) (local LLM server, e.g., gemma3:14b)
+
+Install dependencies:
+```
+pip install -r requirements.txt
+```
+
+## Usage
+1. **Configure Environment:**
+   - Copy `.env.example` to `.env` and set the `OLLAMA_ENDPOINT` and `OLLAMA_MODEL` variables as needed.
+   - Ensure Ollama is running and the required model is pulled.
+2. **Run the Application:**
+   ```
+   python main.py
+   ```
+3. **Main Menu Options:**
+   - Play Best Policy: Watch the best evolved policy play.
+   - Train New Policy: Start a new LLM-guided evolutionary training run.
+   - Play Yourself: Play Flappy Bird interactively.
+   - Quit: Exit the application.
+
+## Documentation
+- See ![Documentation](docs/manual.md)
+
+## LLM Integration
+- The LLM is used to generate initial policy populations (Gemma3) and to perform intelligent mutation during evolution.
+- If the LLM is unavailable, the system falls back to random policy generation/mutation.
+- All LLM prompts and responses are logged for debugging.
+
+## Troubleshooting
+- If the LLM is not responding, check your `.env` settings and that Ollama is running.
+- For UnboundLocalError in `get_coded_state`, ensure the `dist_val` assignment is correct (see `flappy_sim.py`).
+
+## Screenshots
+Screenshots and additional documentation can be found in the `docs/` folder:
+
+- ![Main Menu](docs/Screenshot%202025-06-09%20000020.png)
+- ![Sample Training Graph](docs/image.png)
+
+See more images and explanations in the `docs/` folder.
+
+## Credits
+- Project inspired by LLM-guided reinforcement learning research.
+- Uses Gemma for local LLM inference.
 
 ---
-
-This project is ready for further experimentation, analytics, or gameplay polish!
+For more details, see the code comments, prompt templates in the `prompts/` directory, and the `docs/` folder for screenshots and manual.
