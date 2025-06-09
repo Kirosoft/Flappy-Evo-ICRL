@@ -12,6 +12,7 @@ LLM_TEMPERATURE_INIT_POP = 0.7
 NUM_GENERATIONS = 100
 POPULATION_SIZE = 35
 NUM_PARENTS = 10
+TRAIN_USING_LLM = True  # Set to False to disable LLM-guided training and use only random evolution
 
 
 def train_policy() -> dict | None:
@@ -54,7 +55,7 @@ def train_policy() -> dict | None:
         pygame.font.init()
     PLOT_WIDTH, PLOT_HEIGHT = 800, 600
     plot_screen = pygame.display.set_mode((PLOT_WIDTH, PLOT_HEIGHT))
-    pygame.display.set_caption("Flappy Evo - Training Progress")
+    pygame.display.set_caption("Evo Flappy - Training Progress")
     try:
         font_plot = pygame.font.SysFont(None, 24)
         font_plot_small = pygame.font.SysFont(None, 18)
@@ -212,7 +213,7 @@ def train_policy() -> dict | None:
             p1 = random.choice(parents) if parents else generate_random_policy()
             p2 = (random.choice(parents) if len(parents) > 1 else generate_random_policy())
             child = crossover(p1, p2)
-            child = mutate(child, use_llm=True)  # LLM mutation is still BLOCKING here
+            child = mutate(child, use_llm=TRAIN_USING_LLM)  # LLM mutation is still BLOCKING here
             if validate_policy(child):
                 next_generation.append(child)
             else:
