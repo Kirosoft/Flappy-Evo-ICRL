@@ -66,7 +66,6 @@ pip install -r requirements.txt
 Screenshots and additional documentation can be found in the `docs/` folder:
 
 - ![Main Menu](docs/Screenshot%202025-06-09%20000020.png)
-- ![Sample Training Graph](docs/image.png)
 
 See more images and explanations in the `docs/` folder.
 
