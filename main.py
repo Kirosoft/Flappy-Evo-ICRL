@@ -666,8 +666,8 @@ thread_raw_response_container_init_pop = {'text': None} # Must be a dictionary
 
 def train_policy():
     NUM_GENERATIONS = 100
-    POPULATION_SIZE = 10 
-    NUM_PARENTS = 4      
+    POPULATION_SIZE = 35 
+    NUM_PARENTS = 10      
 
     # --- CSV Log file setup ---
     timestamp = time.strftime("%Y%m%d-%H%M%S")

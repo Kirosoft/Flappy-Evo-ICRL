@@ -71,3 +71,6 @@ generation_best_policies/
 
 # Training logs
 training_log_*.csv
+
+# Failed LLM prompt logs
+.failed_llm_prompts*.txt
